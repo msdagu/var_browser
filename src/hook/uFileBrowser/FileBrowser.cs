@@ -30,12 +30,16 @@ namespace var_browser
 			this.filesScrollRect = ui.filesScrollRect;
 			this.showHiddenToggle = ui.showHiddenToggle;
 
-
             var newgo = GameObject.Instantiate(ui.showHiddenToggle.gameObject, ui.showHiddenToggle.transform.parent);
             Vector3 oldPos = ui.showHiddenToggle.transform.localPosition;
             newgo.transform.localPosition = new Vector3(oldPos.x - 280, oldPos.y, oldPos.z);
             this.showAutoInstallToggle = newgo.GetComponent<Toggle>();
 
+            // Initialize onlyInstalledToggle
+            var newgo2 = GameObject.Instantiate(ui.showHiddenToggle.gameObject, ui.showHiddenToggle.transform.parent);
+            Vector3 oldPos2 = ui.showHiddenToggle.transform.localPosition;
+            newgo2.transform.localPosition = new Vector3(oldPos2.x - 560, oldPos2.y, oldPos2.z);
+            this.onlyInstalledToggle = newgo2.GetComponent<Toggle>();
 
             this.onlyFavoritesToggle = ui.onlyFavoritesToggle;
 			this.limitSlider = ui.limitSlider;
@@ -2635,7 +2639,6 @@ namespace var_browser
 			if (showHiddenToggle != null)//onlyInstalled
 			{
 				showHiddenToggle.isOn = _showHidden;
-				showHiddenToggle.transform.Find("Label").GetComponent<Text>().text = "Show Hidden";
 				showHiddenToggle.onValueChanged.AddListener(SetShowHidden);
 			}
 
