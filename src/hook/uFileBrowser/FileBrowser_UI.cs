@@ -335,6 +335,36 @@ namespace var_browser
 			return uIDynamicButton;
 		}
 
+		public UIDynamicButton CreateLoadButton(int xOffset, int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					RectTransform rectTransform = transform.GetComponent<RectTransform>();
+					rectTransform.anchoredPosition = new Vector2(xOffset, yOffset);
+					rectTransform.sizeDelta = new Vector2(150, 60);
+					
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Load";
+						// Set button color to blue
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.2f, 0.5f, 0.8f, 1f); // Blue
+						colors.highlightedColor = new Color(0.3f, 0.6f, 0.9f, 1f);
+						colors.pressedColor = new Color(0.1f, 0.4f, 0.7f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
+
 		public UIDynamicButton CreateSetFavoriteButton(int xOffset, int yOffset)
 		{
 			UIDynamicButton uIDynamicButton = null;

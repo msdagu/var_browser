@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 //using MVR.FileManagement;
@@ -311,6 +312,7 @@ namespace var_browser
 		// Multi-selection support
 		private HashSet<FileButton> selectedFiles = new HashSet<FileButton>();
 		public UIDynamicButton installButton;
+		public UIDynamicButton loadButton;
 		public UIDynamicButton clearButton;
 		public UIDynamicButton setFavoriteButton;
 		public UIDynamicButton setAutoInstallButton;
@@ -2880,7 +2882,14 @@ namespace var_browser
 				installButton.button.interactable = false; // Initially disabled
 			}
 
-			clearButton = CreateClearButton(-250, -15);
+			loadButton = CreateLoadButton(-250, -15);
+			if (loadButton != null)
+			{
+				loadButton.button.onClick.AddListener(OnLoadSelectedClicked);
+				loadButton.button.interactable = false; // Initially disabled
+			}
+
+			clearButton = CreateClearButton(-80, -15);
 			if (clearButton != null)
 			{
 				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
@@ -3079,6 +3088,11 @@ namespace var_browser
 				installButton.button.interactable = hasSelection;
 			}
 			
+			if (loadButton != null)
+			{
+				loadButton.button.interactable = hasSelection;
+			}
+			
 			if (setFavoriteButton != null)
 			{
 				setFavoriteButton.button.interactable = hasSelection;
@@ -3096,7 +3110,7 @@ namespace var_browser
 		{
 			LogUtil.Log($"Installing {selectedFiles.Count} selected files");
 			
-			bool needsRefresh = false;
+			bool anyDirty = false;
 			
 			foreach (var fileButton in selectedFiles)
 			{
@@ -3118,7 +3132,7 @@ namespace var_browser
 									bool dirty = FileButton.EnsureInstalledByText(aJSON);
 									if (dirty)
 									{
-										needsRefresh = true;
+										anyDirty = true;
 									}
 								}
 							}
@@ -3132,8 +3146,8 @@ namespace var_browser
 				}
 			}
 			
-			// Refresh only once after all installations are complete
-			if (needsRefresh)
+			// Only refresh once if any files were dirty
+			if (anyDirty)
 			{
 				MVR.FileManagement.FileManager.Refresh();
 				var_browser.FileManager.Refresh();
@@ -3158,6 +3172,11 @@ namespace var_browser
 			if (installButton != null)
 			{
 				installButton.button.interactable = false;
+			}
+			
+			if (loadButton != null)
+			{
+				loadButton.button.interactable = false;
 			}
 			
 			if (setFavoriteButton != null)
@@ -3223,6 +3242,42 @@ namespace var_browser
 			}
 			
 			LogUtil.Log("Finished toggling auto install state for selected files");
+		}
+
+		public void OnLoadSelectedClicked()
+		{
+			if (selectedFiles.Count == 0)
+			{
+				LogUtil.Log("No files selected for loading");
+				return;
+			}
+			
+			// Load the first selected file
+			var firstSelectedFile = selectedFiles.FirstOrDefault();
+			if (firstSelectedFile != null)
+			{
+				LogUtil.Log($"Loading selected file: {firstSelectedFile.fullPath}");
+				
+				try
+				{
+					// Use the existing SelectButtonClicked logic to load the file
+					// First set the selected file as the current selection
+					if (selected != null && selected != firstSelectedFile)
+					{
+						selected.Unselect();
+					}
+					selected = firstSelectedFile;
+					
+					// Call the existing load logic
+					SelectButtonClicked();
+					
+					LogUtil.Log($"Successfully loaded: {firstSelectedFile.fullPath}");
+				}
+				catch (Exception e)
+				{
+					LogUtil.LogError($"Error loading {firstSelectedFile.fullPath}: {e.Message}");
+				}
+			}
 		}
 
 	}
