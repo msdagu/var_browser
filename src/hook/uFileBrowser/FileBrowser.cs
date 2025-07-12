@@ -2753,6 +2753,49 @@ namespace var_browser
 				VamHookPlugin.singleton.OpenMiscAll();
 			});
 
+			// Install section
+			CreateRightHeader("Install", -850 - 10 + offset, Color.black);
+			
+			installButton = CreateRightInstallButton(-900 + offset);
+			if (installButton != null)
+			{
+				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
+				installButton.button.interactable = false; // Initially disabled
+			}
+
+			// Functions section
+			CreateRightHeader("Functions", -950 - 10 + offset, Color.black);
+			
+			clearButton = CreateRightClearButton(-1000 + offset);
+			if (clearButton != null)
+			{
+				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
+			}
+
+			setFavoriteButton = CreateRightSetFavoriteButton(-1050 + offset);
+			if (setFavoriteButton != null)
+			{
+				setFavoriteButton.button.onClick.AddListener(OnSetFavoriteClicked);
+				setFavoriteButton.button.interactable = false; // Initially disabled
+			}
+
+			setAutoInstallButton = CreateRightSetAutoInstallButton(-1100 + offset);
+			if (setAutoInstallButton != null)
+			{
+				setAutoInstallButton.button.onClick.AddListener(OnSetAutoInstallClicked);
+				setAutoInstallButton.button.interactable = false; // Initially disabled
+			}
+
+			// Load section
+			CreateRightHeader("Load", -1150 - 10 + offset, Color.black);
+			
+			loadButton = CreateRightLoadButton(-1200 + offset);
+			if (loadButton != null)
+			{
+				loadButton.button.onClick.AddListener(OnLoadSelectedClicked);
+				loadButton.button.interactable = false; // Initially disabled
+			}
+
 
 			//left
 			InitTags();
@@ -2862,7 +2905,7 @@ namespace var_browser
             {
 				//这个放最后，因为会弹出popup窗口，否则会被挡住
 				//创作者过滤 - moved down below buttons
-				var createrContainter = CreateUIContainer(-420, -220, 420, 120);
+				var createrContainter = CreateUIContainer(-420, 0, 420, 120);
 				var list = new List<string>();
 				list.Add("All");
 				List<string> choicesList4 = list;
@@ -2875,40 +2918,7 @@ namespace var_browser
 
 			// Initialize Install and Clear buttons - moved up above creator filter
 			// First row of buttons
-			installButton = CreateInstallButton(-420, -15);
-			if (installButton != null)
-			{
-				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
-				installButton.button.interactable = false; // Initially disabled
-			}
-
-			loadButton = CreateLoadButton(-250, -15);
-			if (loadButton != null)
-			{
-				loadButton.button.onClick.AddListener(OnLoadSelectedClicked);
-				loadButton.button.interactable = false; // Initially disabled
-			}
-
-			clearButton = CreateClearButton(-80, -15);
-			if (clearButton != null)
-			{
-				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
-			}
-			
 			// Second row of buttons
-			setFavoriteButton = CreateSetFavoriteButton(-420, -85);
-			if (setFavoriteButton != null)
-			{
-				setFavoriteButton.button.onClick.AddListener(OnSetFavoriteClicked);
-				setFavoriteButton.button.interactable = false; // Initially disabled
-			}
-
-			setAutoInstallButton = CreateSetAutoInstallButton(-250, -85);
-			if (setAutoInstallButton != null)
-			{
-				setAutoInstallButton.button.onClick.AddListener(OnSetAutoInstallClicked);
-				setAutoInstallButton.button.interactable = false; // Initially disabled
-			}
 
 		}
 		JSONStorableStringChooser unknownClothingTagFilterChooser;

@@ -425,6 +425,137 @@ namespace var_browser
 			return uIDynamicButton;
 		}
 
+		// Right-side function buttons
+		public UIDynamicButton CreateRightInstallButton(int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateRightUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Install";
+						// Set button color to green
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.2f, 0.8f, 0.2f, 1f); // Green
+						colors.highlightedColor = new Color(0.3f, 0.9f, 0.3f, 1f);
+						colors.pressedColor = new Color(0.1f, 0.7f, 0.1f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
+
+		public UIDynamicButton CreateRightLoadButton(int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateRightUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Load";
+						// Set button color to blue
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.2f, 0.5f, 0.8f, 1f); // Blue
+						colors.highlightedColor = new Color(0.3f, 0.6f, 0.9f, 1f);
+						colors.pressedColor = new Color(0.1f, 0.4f, 0.7f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
+
+		public UIDynamicButton CreateRightClearButton(int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateRightUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Clear Selection";
+						// Set button color to red
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.8f, 0.2f, 0.2f, 1f); // Red
+						colors.highlightedColor = new Color(0.9f, 0.3f, 0.3f, 1f);
+						colors.pressedColor = new Color(0.7f, 0.1f, 0.1f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
+
+		public UIDynamicButton CreateRightSetFavoriteButton(int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateRightUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Favorite";
+						// Set button color to pink/magenta
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.8f, 0.2f, 0.8f, 1f); // Magenta
+						colors.highlightedColor = new Color(0.9f, 0.3f, 0.9f, 1f);
+						colors.pressedColor = new Color(0.7f, 0.1f, 0.7f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
+
+		public UIDynamicButton CreateRightSetAutoInstallButton(int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateRightUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Auto Install";
+						// Set button color to orange
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(1f, 0.6f, 0.2f, 1f); // Orange
+						colors.highlightedColor = new Color(1f, 0.7f, 0.3f, 1f);
+						colors.pressedColor = new Color(0.9f, 0.5f, 0.1f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
+
 		// ...existing code...
 	}
 }
