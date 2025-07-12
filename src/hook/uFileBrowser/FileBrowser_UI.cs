@@ -351,7 +351,7 @@ namespace var_browser
 					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
 					if (uIDynamicButton != null)
 					{
-						uIDynamicButton.label = "Set Favorite";
+						uIDynamicButton.label = "Toggle Fav";
 						// Set button color to pink/magenta
 						var button = uIDynamicButton.button;
 						var colors = button.colors;
@@ -381,7 +381,7 @@ namespace var_browser
 					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
 					if (uIDynamicButton != null)
 					{
-						uIDynamicButton.label = "Set Auto Install";
+						uIDynamicButton.label = "Toggle Auto";
 						// Set button color to orange
 						var button = uIDynamicButton.button;
 						var colors = button.colors;

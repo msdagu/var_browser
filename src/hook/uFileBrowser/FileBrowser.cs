@@ -2859,8 +2859,8 @@ namespace var_browser
 
             {
 				//这个放最后，因为会弹出popup窗口，否则会被挡住
-				//创作者过滤
-				var createrContainter = CreateUIContainer(-420, 0, 420, 120);
+				//创作者过滤 - moved down below buttons
+				var createrContainter = CreateUIContainer(-420, -220, 420, 120);
 				var list = new List<string>();
 				list.Add("All");
 				List<string> choicesList4 = list;
@@ -2871,30 +2871,30 @@ namespace var_browser
 
 			}
 
-			// Initialize Install and Clear buttons - position them below the creator filter
+			// Initialize Install and Clear buttons - moved up above creator filter
 			// First row of buttons
-			installButton = CreateInstallButton(-420, -135);
+			installButton = CreateInstallButton(-420, -15);
 			if (installButton != null)
 			{
 				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
 				installButton.button.interactable = false; // Initially disabled
 			}
 
-			clearButton = CreateClearButton(-250, -135);
+			clearButton = CreateClearButton(-250, -15);
 			if (clearButton != null)
 			{
 				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
 			}
 			
 			// Second row of buttons
-			setFavoriteButton = CreateSetFavoriteButton(-420, -205);
+			setFavoriteButton = CreateSetFavoriteButton(-420, -85);
 			if (setFavoriteButton != null)
 			{
 				setFavoriteButton.button.onClick.AddListener(OnSetFavoriteClicked);
 				setFavoriteButton.button.interactable = false; // Initially disabled
 			}
 
-			setAutoInstallButton = CreateSetAutoInstallButton(-250, -205);
+			setAutoInstallButton = CreateSetAutoInstallButton(-250, -85);
 			if (setAutoInstallButton != null)
 			{
 				setAutoInstallButton.button.onClick.AddListener(OnSetAutoInstallClicked);
@@ -3165,7 +3165,7 @@ namespace var_browser
 
 		public void OnSetFavoriteClicked()
 		{
-			LogUtil.Log($"Setting {selectedFiles.Count} selected files as favorite");
+			LogUtil.Log($"Toggling favorite state for {selectedFiles.Count} selected files");
 			
 			foreach (var fileButton in selectedFiles)
 			{
@@ -3175,22 +3175,24 @@ namespace var_browser
 					FileEntry fileEntry = FileManager.GetFileEntry(fullPath, true);
 					if (fileEntry != null)
 					{
-						fileEntry.SetFavorite(true);
+						// Toggle the favorite state
+						bool currentFavoriteState = fileEntry.IsFavorite();
+						fileEntry.SetFavorite(!currentFavoriteState);
 						fileButton.RefreshInstallStatus(); // Refresh the visual state
 					}
 				}
 				catch (Exception e)
 				{
-					LogUtil.LogError($"Error setting favorite for {fileButton.fullPath}: {e.Message}");
+					LogUtil.LogError($"Error toggling favorite for {fileButton.fullPath}: {e.Message}");
 				}
 			}
 			
-			LogUtil.Log("Finished setting selected files as favorite");
+			LogUtil.Log("Finished toggling favorite state for selected files");
 		}
 
 		public void OnSetAutoInstallClicked()
 		{
-			LogUtil.Log($"Setting {selectedFiles.Count} selected files to auto install");
+			LogUtil.Log($"Toggling auto install state for {selectedFiles.Count} selected files");
 			
 			foreach (var fileButton in selectedFiles)
 			{
@@ -3200,17 +3202,19 @@ namespace var_browser
 					FileEntry fileEntry = FileManager.GetFileEntry(fullPath, true);
 					if (fileEntry != null)
 					{
-						fileEntry.SetAutoInstall(true);
+						// Toggle the auto install state
+						bool currentAutoInstallState = fileEntry.IsAutoInstall();
+						fileEntry.SetAutoInstall(!currentAutoInstallState);
 						fileButton.RefreshInstallStatus(); // Refresh the visual state
 					}
 				}
 				catch (Exception e)
 				{
-					LogUtil.LogError($"Error setting auto install for {fileButton.fullPath}: {e.Message}");
+					LogUtil.LogError($"Error toggling auto install for {fileButton.fullPath}: {e.Message}");
 				}
 			}
 			
-			LogUtil.Log("Finished setting selected files to auto install");
+			LogUtil.Log("Finished toggling auto install state for selected files");
 		}
 
 	}
