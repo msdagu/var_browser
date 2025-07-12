@@ -3124,35 +3124,10 @@ namespace var_browser
 			
 			foreach (var fileButton in selectedFiles)
 			{
-				try
+				bool dirty = InstallFileButton(fileButton);
+				if (dirty)
 				{
-					if (inGame)
-					{
-						fileButton.EnsureInstalled();
-					}
-					else
-					{
-						if (fileButton.fullPath.EndsWith(".json"))
-						{
-							using (FileEntryStream fileEntryStream = FileManager.OpenStream(fileButton.fullPath))
-							{
-								using (StreamReader streamReader = new StreamReader(fileEntryStream.Stream))
-								{
-									string aJSON = streamReader.ReadToEnd();
-									bool dirty = FileButton.EnsureInstalledByText(aJSON);
-									if (dirty)
-									{
-										anyDirty = true;
-									}
-								}
-							}
-						}
-						fileButton.OnInstalled(true);
-					}
-				}
-				catch (Exception e)
-				{
-					LogUtil.LogError($"Error installing {fileButton.fullPath}: {e.Message}");
+					anyDirty = true;
 				}
 			}
 			
@@ -3270,6 +3245,26 @@ namespace var_browser
 				
 				try
 				{
+					// Check if the package is installed first
+					if (!firstSelectedFile.isInstalled)
+					{
+						LogUtil.Log($"Package not installed, installing first: {firstSelectedFile.fullPath}");
+						
+						// Install the package first
+						bool dirty = InstallFileButton(firstSelectedFile);
+						if (dirty)
+						{
+							MVR.FileManagement.FileManager.Refresh();
+							var_browser.FileManager.Refresh();
+						}
+						
+						LogUtil.Log($"Package installed successfully: {firstSelectedFile.fullPath}");
+					}
+					else
+					{
+						LogUtil.Log($"Package already installed: {firstSelectedFile.fullPath}");
+					}
+					
 					// Use the existing SelectButtonClicked logic to load the file
 					// First set the selected file as the current selection
 					if (selected != null && selected != firstSelectedFile)
@@ -3288,6 +3283,44 @@ namespace var_browser
 					LogUtil.LogError($"Error loading {firstSelectedFile.fullPath}: {e.Message}");
 				}
 			}
+		}
+
+		private bool InstallFileButton(FileButton fileButton)
+		{
+			bool isDirty = false;
+			
+			try
+			{
+				if (inGame)
+				{
+					fileButton.EnsureInstalled();
+				}
+				else
+				{
+					if (fileButton.fullPath.EndsWith(".json"))
+					{
+						using (FileEntryStream fileEntryStream = FileManager.OpenStream(fileButton.fullPath))
+						{
+							using (StreamReader streamReader = new StreamReader(fileEntryStream.Stream))
+							{
+								string aJSON = streamReader.ReadToEnd();
+								bool dirty = FileButton.EnsureInstalledByText(aJSON);
+								if (dirty)
+								{
+									isDirty = true;
+								}
+							}
+						}
+					}
+					fileButton.OnInstalled(true);
+				}
+			}
+			catch (Exception e)
+			{
+				LogUtil.LogError($"Error installing {fileButton.fullPath}: {e.Message}");
+			}
+			
+			return isDirty;
 		}
 
 	}
