@@ -316,6 +316,7 @@ namespace var_browser
 		public UIDynamicButton clearButton;
 		public UIDynamicButton setFavoriteButton;
 		public UIDynamicButton setAutoInstallButton;
+		public UIDynamicButton setHiddenButton;
 
 		private FileBrowserCallback callback;
 
@@ -2786,6 +2787,13 @@ namespace var_browser
 				setAutoInstallButton.button.interactable = false; // Initially disabled
 			}
 
+			setHiddenButton = CreateRightSetHiddenButton(-1150 + offset);
+			if (setHiddenButton != null)
+			{
+				setHiddenButton.button.onClick.AddListener(OnSetHiddenClicked);
+				setHiddenButton.button.interactable = false; // Initially disabled
+			}
+
 			// Load section
 			CreateRightHeader("Load", -1150 - 10 + offset, Color.black);
 			
@@ -3113,6 +3121,11 @@ namespace var_browser
 				setAutoInstallButton.button.interactable = hasSelection;
 			}
 			
+			if (setHiddenButton != null)
+			{
+				setHiddenButton.button.interactable = hasSelection;
+			}
+			
 			LogUtil.Log($"Selected files count: {selectedFiles.Count}");
 		}
 
@@ -3173,6 +3186,11 @@ namespace var_browser
 			{
 				setAutoInstallButton.button.interactable = false;
 			}
+			
+			if (setHiddenButton != null)
+			{
+				setHiddenButton.button.interactable = false;
+			}
 		}
 
 		public void OnSetFavoriteClicked()
@@ -3227,6 +3245,33 @@ namespace var_browser
 			}
 			
 			LogUtil.Log("Finished toggling auto install state for selected files");
+		}
+
+		public void OnSetHiddenClicked()
+		{
+			LogUtil.Log($"Toggling hidden state for {selectedFiles.Count} selected files");
+			
+			foreach (var fileButton in selectedFiles)
+			{
+				try
+				{
+					string fullPath = fileButton.fullPath;
+					FileEntry fileEntry = FileManager.GetFileEntry(fullPath, true);
+					if (fileEntry != null)
+					{
+						// Toggle the hidden state
+						bool currentHiddenState = fileEntry.IsHidden();
+						fileEntry.SetHidden(!currentHiddenState);
+						fileButton.RefreshInstallStatus(); // Refresh the visual state
+					}
+				}
+				catch (Exception e)
+				{
+					LogUtil.LogError($"Error toggling hidden for {fileButton.fullPath}: {e.Message}");
+				}
+			}
+			
+			LogUtil.Log("Finished toggling hidden state for selected files");
 		}
 
 		public void OnLoadSelectedClicked()
