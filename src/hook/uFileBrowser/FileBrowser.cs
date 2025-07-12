@@ -3232,6 +3232,8 @@ namespace var_browser
 					LogUtil.LogError($"Error toggling favorite for {fileButton.fullPath}: {e.Message}");
 				}
 			}
+
+			OnClearSelectionClicked();
 			
 			LogUtil.Log("Finished toggling favorite state for selected files");
 		}
@@ -3259,6 +3261,8 @@ namespace var_browser
 					LogUtil.LogError($"Error toggling auto install for {fileButton.fullPath}: {e.Message}");
 				}
 			}
+
+			OnClearSelectionClicked();
 			
 			LogUtil.Log("Finished toggling auto install state for selected files");
 		}
