@@ -100,6 +100,49 @@ namespace var_browser
 			sf.FavoriteNames = list.ToArray();
 			File.WriteAllText(GlobalInfo.FavoritePath, JsonUtility.ToJson(sf));
 		}
+
+		public override bool IsHidden()
+		{
+			string key = null;
+			if (isVar)
+				key = System.IO.Path.GetFileNameWithoutExtension(Path);
+			else
+				key = Path;
+			if (HiddenLookup.Contains(key))
+				return true;
+			return false;
+		}
+
+		public override void SetHidden(bool b)
+		{
+			string key = null;
+			if (isVar)
+				key = System.IO.Path.GetFileNameWithoutExtension(Path);
+			else
+				key = Path;
+			if (b)
+			{
+				HiddenLookup.Add(key);
+			}
+			else
+			{
+				HiddenLookup.Remove(key);
+			}
+
+			if (!Directory.Exists(GlobalInfo.FavoriteDirectory))
+			{
+				Directory.CreateDirectory(GlobalInfo.FavoriteDirectory);
+			}
+
+			SerializableFavorite sf = new SerializableFavorite();
+			var list = new List<string>();
+			foreach (var item in HiddenLookup)
+			{
+				list.Add(item);
+			}
+			sf.FavoriteNames = list.ToArray();
+			File.WriteAllText(GlobalInfo.HiddenPath, JsonUtility.ToJson(sf));
+		}
 		public override bool IsAutoInstall()
 		{
             string key = System.IO.Path.GetFileNameWithoutExtension(Path);

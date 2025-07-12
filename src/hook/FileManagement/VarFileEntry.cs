@@ -60,12 +60,16 @@ namespace var_browser
 
 		public override bool IsHidden()
 		{
+			string key = this.Package.Creator + "." + this.Package.Name + ":" + InternalPath;
+
+			if (HiddenLookup.Contains(key))
+				return true;
 			return false;
 		}
 
 		public bool IsHiddenModifiable()
 		{
-			return false;
+			return true;
 		}
 
 
@@ -123,6 +127,33 @@ namespace var_browser
             }
 			sf.FavoriteNames = list.ToArray();
 			File.WriteAllText(GlobalInfo.FavoritePath, JsonUtility.ToJson(sf));
+		}
+
+		public override void SetHidden(bool b)
+		{
+			string key = this.Package.Creator + "." + this.Package.Name + ":" + InternalPath;
+			if (b)
+			{
+				HiddenLookup.Add(key);
+			}
+			else
+			{
+				HiddenLookup.Remove(key);
+			}
+
+			if (!Directory.Exists(GlobalInfo.FavoriteDirectory))
+			{
+				Directory.CreateDirectory(GlobalInfo.FavoriteDirectory);
+			}
+
+			SerializableFavorite sf = new SerializableFavorite();
+			var list = new List<string>();
+			foreach (var item in HiddenLookup)
+			{
+				list.Add(item);
+			}
+			sf.FavoriteNames = list.ToArray();
+			File.WriteAllText(GlobalInfo.HiddenPath, JsonUtility.ToJson(sf));
 		}
 
         public override bool SetAutoInstall(bool b)

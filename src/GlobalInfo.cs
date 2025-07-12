@@ -15,6 +15,8 @@ namespace var_browser
         public static string FavoriteDirectory = "Custom/PluginData/sfishere";
         public static string FavoritePath = "Custom/PluginData/sfishere/Favorites.txt";
 
+        public static string HiddenPath = "Custom/PluginData/sfishere/Hidden.txt";
+
         //public static string FixVarNamePath = "Custom/PluginData/sfishere/FixVarName.txt";
 
 

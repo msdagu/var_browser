@@ -125,6 +125,39 @@ namespace var_browser
 			}
 		}
 
+		protected static HashSet<string> s_HiddenLookup;
+		protected static HashSet<string> HiddenLookup
+		{
+			get
+			{
+				if (s_HiddenLookup == null)
+				{
+					s_HiddenLookup = new HashSet<string>();
+					if (File.Exists(GlobalInfo.HiddenPath))
+					{
+						string txt = File.ReadAllText(GlobalInfo.HiddenPath);
+						var hidden = JsonUtility.FromJson<SerializableFavorite>(txt);
+						foreach (var item in hidden.FavoriteNames)
+						{
+							string key = item;
+							string[] splits = item.Split(':');
+							if (splits.Length == 2)
+							{
+								string[] array = splits[0].Split('.');
+								if (array.Length == 3)
+								{
+									key = array[0] + "." + array[1] + ":" + splits[1];
+								}
+							}
+							s_HiddenLookup.Add(key);
+						}
+					}
+				}
+
+				return s_HiddenLookup;
+			}
+		}
+
 		protected static HashSet<string> s_AutoInstallLookup;
 		public static HashSet<string> AutoInstallLookup
 		{
