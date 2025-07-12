@@ -2795,9 +2795,9 @@ namespace var_browser
 			}
 
 			// Load section
-			CreateRightHeader("Load", -1150 - 10 + offset, Color.black);
+			CreateRightHeader("Load", -1200 - 10 + offset, Color.black);
 			
-			loadButton = CreateRightLoadButton(-1200 + offset);
+			loadButton = CreateRightLoadButton(-1250 + offset);
 			if (loadButton != null)
 			{
 				loadButton.button.onClick.AddListener(OnLoadSelectedClicked);
