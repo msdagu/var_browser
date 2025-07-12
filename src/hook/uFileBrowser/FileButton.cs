@@ -437,18 +437,21 @@ namespace var_browser
             bool isInstalled = false;
             bool isAutoInstall = false;
             bool isFavorite = false;
+            bool isHidden = false;
             FileEntry fileEntry = var_browser.FileManager.GetFileEntry(fullPath, true);
             if (fileEntry != null && fileEntry is VarFileEntry)
             {
                 isInstalled = fileEntry.IsInstalled();
                 isAutoInstall = fileEntry.IsAutoInstall();
                 isFavorite = fileEntry.IsFavorite();
+                isHidden = fileEntry.IsHidden();
             }
             else if (fileEntry != null && fileEntry is SystemFileEntry)
             {
                 isInstalled = fileEntry.IsInstalled();
                 isAutoInstall = fileEntry.IsAutoInstall();
                 isFavorite = fileEntry.IsFavorite();
+                isHidden = fileEntry.IsHidden();
             }
             else
             {
@@ -467,6 +470,7 @@ namespace var_browser
                     isInstalled = fileEntry.IsInstalled();
                     isAutoInstall = fileEntry.IsAutoInstall();
                     isFavorite = fileEntry.IsFavorite();
+                    isHidden = fileEntry.IsHidden();
                 }
                 else
                 {
@@ -479,14 +483,21 @@ namespace var_browser
             favoriteToggle.onValueChanged.AddListener(OnFavoriteChange);
             useFileAsTemplateToggle.onValueChanged.AddListener(OnSetAutoInstall);
 
-            UpdateButtonImageColor(isInstalled, isAutoInstall, isFavorite);
+            UpdateButtonImageColor(isInstalled, isAutoInstall, isFavorite, isHidden);
         }
-        void UpdateButtonImageColor(bool isInstalled, bool isAutoInstall,bool isFavorite)
+        void UpdateButtonImageColor(bool isInstalled, bool isAutoInstall, bool isFavorite, bool isHidden)
         {
             // If selected, use a distinct selection color
             if (isSelected)
             {
                 this.buttonImage.color = new Color32(100, 200, 255, 255); // Light blue for selection
+                return;
+            }
+            
+            // Hidden files get priority over other states (except selection)
+            if (isHidden)
+            {
+                this.buttonImage.color = new Color32(128, 128, 128, 255); // Dark gray for hidden
                 return;
             }
             

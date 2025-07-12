@@ -2128,6 +2128,12 @@ namespace var_browser
 							HideButton(sortedFilesAndDir);
 							continue;
 						}
+						// Filter hidden files unless showHidden is enabled
+						if (!_showHidden && sortedFilesAndDir.isHidden)
+						{
+							HideButton(sortedFilesAndDir);
+							continue;
+						}
 						//if (_onlyTemplates && !sortedFilesAndDir.isTemplate)
 						//{
 						//	HideButton(button);
@@ -3263,6 +3269,7 @@ namespace var_browser
 						bool currentHiddenState = fileEntry.IsHidden();
 						fileEntry.SetHidden(!currentHiddenState);
 						fileButton.RefreshInstallStatus(); // Refresh the visual state
+						//HideButton(fileButton);
 					}
 				}
 				catch (Exception e)
@@ -3270,6 +3277,8 @@ namespace var_browser
 					LogUtil.LogError($"Error toggling hidden for {fileButton.fullPath}: {e.Message}");
 				}
 			}
+			
+			OnClearSelectionClicked();
 			
 			LogUtil.Log("Finished toggling hidden state for selected files");
 		}
