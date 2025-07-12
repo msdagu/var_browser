@@ -140,7 +140,7 @@ namespace var_browser
             {
                 if (browser.inGame)
                 {
-                    EnsureInstalled();
+                    //EnsureInstalled();
                     browser.OnFileClick(this);
                 }
                 else

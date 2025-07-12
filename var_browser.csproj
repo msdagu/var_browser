@@ -48,7 +48,9 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\..\..\vam\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib" />
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>.\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="MHLab.PATCH">
       <HintPath>..\..\..\..\vam\VaM_Data\Managed\MHLab.PATCH.dll</HintPath>
     </Reference>
@@ -256,6 +258,7 @@
   <ItemGroup>
     <Compile Include="src\GlobalInfo.cs" />
     <Compile Include="src\hook\AtomHook.cs" />
+    <Compile Include="src\hook\CustomAssetLoader.cs" />
     <Compile Include="src\hook\DAZMorphMgr.cs" />
     <Compile Include="src\hook\FileManagement\VarPackageMgr.cs" />
     <Compile Include="src\hook\HubResourcePackageHook.cs" />
@@ -316,6 +319,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) "G:\vam\Virt A Mate Simple\BepInEx\plugins"</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) "C:\vam\BepInEx\plugins"</PostBuildEvent>
   </PropertyGroup>
 </Project>
