@@ -2753,20 +2753,6 @@ namespace var_browser
 			//left
 			InitTags();
 
-			// Initialize Install and Clear buttons
-			installButton = CreateInstallButton(-350, -50);
-			if (installButton != null)
-			{
-				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
-				installButton.button.interactable = false; // Initially disabled
-			}
-
-			clearButton = CreateClearButton(-180, -50);
-			if (clearButton != null)
-			{
-				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
-			}
-
 #region 头发
             {
 
@@ -2881,6 +2867,20 @@ namespace var_browser
 				creatorFilterChooser.isRestorable = false;
 				creatorPopup = CreateFilterablePopup(createrContainter, creatorFilterChooser);//高度120
 
+			}
+
+			// Initialize Install and Clear buttons - position them below the creator filter
+			installButton = CreateInstallButton(-350, -135);
+			if (installButton != null)
+			{
+				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
+				installButton.button.interactable = false; // Initially disabled
+			}
+
+			clearButton = CreateClearButton(-180, -135);
+			if (clearButton != null)
+			{
+				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
 			}
 
 		}
