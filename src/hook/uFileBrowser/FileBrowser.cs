@@ -3246,7 +3246,13 @@ namespace var_browser
 				try
 				{
 					// Check if the package is installed first
-					if (!firstSelectedFile.isInstalled)
+					bool isInstalled = false;
+					if (firstSelectedFile.FileEntry != null)
+					{
+						isInstalled = firstSelectedFile.FileEntry.IsInstalled();
+					}
+					
+					if (!isInstalled)
 					{
 						LogUtil.Log($"Package not installed, installing first: {firstSelectedFile.fullPath}");
 						
