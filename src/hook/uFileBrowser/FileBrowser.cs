@@ -2634,9 +2634,16 @@ namespace var_browser
 			}
 			if (showHiddenToggle != null)//onlyInstalled
 			{
-				showHiddenToggle.isOn = _onlyInstalled;
-				showHiddenToggle.transform.Find("Label").GetComponent<Text>().text = "Only Installed";
-				showHiddenToggle.onValueChanged.AddListener(SetOnlyInstalled);
+				showHiddenToggle.isOn = _showHidden;
+				showHiddenToggle.transform.Find("Label").GetComponent<Text>().text = "Show Hidden";
+				showHiddenToggle.onValueChanged.AddListener(SetShowHidden);
+			}
+
+			if (onlyInstalledToggle != null)//onlyInstalled
+			{
+				onlyInstalledToggle.isOn = _onlyInstalled;
+				onlyInstalledToggle.transform.Find("Label").GetComponent<Text>().text = "Only Installed";
+				onlyInstalledToggle.onValueChanged.AddListener(SetOnlyInstalled);
 			}
 
 			if (showAutoInstallToggle != null)//onlyInstalled
