@@ -3096,6 +3096,8 @@ namespace var_browser
 		{
 			LogUtil.Log($"Installing {selectedFiles.Count} selected files");
 			
+			bool needsRefresh = false;
+			
 			foreach (var fileButton in selectedFiles)
 			{
 				try
@@ -3116,8 +3118,7 @@ namespace var_browser
 									bool dirty = FileButton.EnsureInstalledByText(aJSON);
 									if (dirty)
 									{
-										MVR.FileManagement.FileManager.Refresh();
-										var_browser.FileManager.Refresh();
+										needsRefresh = true;
 									}
 								}
 							}
@@ -3129,6 +3130,13 @@ namespace var_browser
 				{
 					LogUtil.LogError($"Error installing {fileButton.fullPath}: {e.Message}");
 				}
+			}
+			
+			// Refresh only once after all installations are complete
+			if (needsRefresh)
+			{
+				MVR.FileManagement.FileManager.Refresh();
+				var_browser.FileManager.Refresh();
 			}
 			
 			// Clear selection after installation
