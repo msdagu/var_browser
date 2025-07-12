@@ -312,6 +312,8 @@ namespace var_browser
 		private HashSet<FileButton> selectedFiles = new HashSet<FileButton>();
 		public UIDynamicButton installButton;
 		public UIDynamicButton clearButton;
+		public UIDynamicButton setFavoriteButton;
+		public UIDynamicButton setAutoInstallButton;
 
 		private FileBrowserCallback callback;
 
@@ -2020,7 +2022,7 @@ namespace var_browser
                                     }
                                 }
                                 if (!pass)
-                                {
+								{
 									//如果包含了no tag，则特殊处理
                                     if (includeNoTag)
                                     {
@@ -2870,17 +2872,33 @@ namespace var_browser
 			}
 
 			// Initialize Install and Clear buttons - position them below the creator filter
-			installButton = CreateInstallButton(-350, -135);
+			// First row of buttons
+			installButton = CreateInstallButton(-420, -135);
 			if (installButton != null)
 			{
 				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
 				installButton.button.interactable = false; // Initially disabled
 			}
 
-			clearButton = CreateClearButton(-180, -135);
+			clearButton = CreateClearButton(-250, -135);
 			if (clearButton != null)
 			{
 				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
+			}
+			
+			// Second row of buttons
+			setFavoriteButton = CreateSetFavoriteButton(-420, -205);
+			if (setFavoriteButton != null)
+			{
+				setFavoriteButton.button.onClick.AddListener(OnSetFavoriteClicked);
+				setFavoriteButton.button.interactable = false; // Initially disabled
+			}
+
+			setAutoInstallButton = CreateSetAutoInstallButton(-250, -205);
+			if (setAutoInstallButton != null)
+			{
+				setAutoInstallButton.button.onClick.AddListener(OnSetAutoInstallClicked);
+				setAutoInstallButton.button.interactable = false; // Initially disabled
 			}
 
 		}
@@ -3053,10 +3071,22 @@ namespace var_browser
 				selectedFiles.Remove(fb);
 			}
 			
-			// Update install button state
+			// Update button states based on selection count
+			bool hasSelection = selectedFiles.Count > 0;
+			
 			if (installButton != null)
 			{
-				installButton.button.interactable = selectedFiles.Count > 0;
+				installButton.button.interactable = hasSelection;
+			}
+			
+			if (setFavoriteButton != null)
+			{
+				setFavoriteButton.button.interactable = hasSelection;
+			}
+			
+			if (setAutoInstallButton != null)
+			{
+				setAutoInstallButton.button.interactable = hasSelection;
 			}
 			
 			LogUtil.Log($"Selected files count: {selectedFiles.Count}");
@@ -3116,12 +3146,73 @@ namespace var_browser
 			}
 			selectedFiles.Clear();
 			
-			// Update install button state
+			// Update all button states
 			if (installButton != null)
 			{
 				installButton.button.interactable = false;
 			}
+			
+			if (setFavoriteButton != null)
+			{
+				setFavoriteButton.button.interactable = false;
+			}
+			
+			if (setAutoInstallButton != null)
+			{
+				setAutoInstallButton.button.interactable = false;
+			}
 		}
+
+		public void OnSetFavoriteClicked()
+		{
+			LogUtil.Log($"Setting {selectedFiles.Count} selected files as favorite");
+			
+			foreach (var fileButton in selectedFiles)
+			{
+				try
+				{
+					string fullPath = fileButton.fullPath;
+					FileEntry fileEntry = FileManager.GetFileEntry(fullPath, true);
+					if (fileEntry != null)
+					{
+						fileEntry.SetFavorite(true);
+						fileButton.RefreshInstallStatus(); // Refresh the visual state
+					}
+				}
+				catch (Exception e)
+				{
+					LogUtil.LogError($"Error setting favorite for {fileButton.fullPath}: {e.Message}");
+				}
+			}
+			
+			LogUtil.Log("Finished setting selected files as favorite");
+		}
+
+		public void OnSetAutoInstallClicked()
+		{
+			LogUtil.Log($"Setting {selectedFiles.Count} selected files to auto install");
+			
+			foreach (var fileButton in selectedFiles)
+			{
+				try
+				{
+					string fullPath = fileButton.fullPath;
+					FileEntry fileEntry = FileManager.GetFileEntry(fullPath, true);
+					if (fileEntry != null)
+					{
+						fileEntry.SetAutoInstall(true);
+						fileButton.RefreshInstallStatus(); // Refresh the visual state
+					}
+				}
+				catch (Exception e)
+				{
+					LogUtil.LogError($"Error setting auto install for {fileButton.fullPath}: {e.Message}");
+				}
+			}
+			
+			LogUtil.Log("Finished setting selected files to auto install");
+		}
+
 	}
 
 
