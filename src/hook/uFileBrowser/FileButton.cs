@@ -430,7 +430,7 @@ namespace var_browser
 
             }
         }
-        void RefreshInstallStatus()
+        public void RefreshInstallStatus()
         {
             useFileAsTemplateToggle.onValueChanged.RemoveAllListeners();
                 favoriteToggle.onValueChanged.RemoveAllListeners();
