@@ -3247,9 +3247,10 @@ namespace var_browser
 				{
 					// Check if the package is installed first
 					bool isInstalled = false;
-					if (firstSelectedFile.FileEntry != null)
+					FileEntry fileEntry = FileManager.GetFileEntry(firstSelectedFile.fullPath, true);
+					if (fileEntry != null)
 					{
-						isInstalled = firstSelectedFile.FileEntry.IsInstalled();
+						isInstalled = fileEntry.IsInstalled();
 					}
 					
 					if (!isInstalled)
