@@ -275,7 +275,66 @@ namespace var_browser
 			text.fontStyle = FontStyle.Bold;
 			text.color = color;
 		}
+		public UIDynamicButton CreateInstallButton(int xOffset, int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					RectTransform rectTransform = transform.GetComponent<RectTransform>();
+					rectTransform.anchoredPosition = new Vector2(xOffset, yOffset);
+					rectTransform.sizeDelta = new Vector2(150, 60);
+					
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Install Selected";
+						// Set button color to green
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.2f, 0.8f, 0.2f, 1f); // Green
+						colors.highlightedColor = new Color(0.3f, 0.9f, 0.3f, 1f);
+						colors.pressedColor = new Color(0.1f, 0.7f, 0.1f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
 
+		public UIDynamicButton CreateClearButton(int xOffset, int yOffset)
+		{
+			UIDynamicButton uIDynamicButton = null;
+			var manager = SuperController.singleton.transform.Find("ScenePluginManager").GetComponent<MVRPluginManager>();
+			if (manager != null && manager.configurableButtonPrefab != null)
+			{
+				Transform transform = CreateUIElement(manager.configurableButtonPrefab.transform, yOffset);
+				if (transform != null)
+				{
+					RectTransform rectTransform = transform.GetComponent<RectTransform>();
+					rectTransform.anchoredPosition = new Vector2(xOffset, yOffset);
+					rectTransform.sizeDelta = new Vector2(150, 60);
+					
+					uIDynamicButton = transform.GetComponent<UIDynamicButton>();
+					if (uIDynamicButton != null)
+					{
+						uIDynamicButton.label = "Clear Selection";
+						// Set button color to red
+						var button = uIDynamicButton.button;
+						var colors = button.colors;
+						colors.normalColor = new Color(0.8f, 0.2f, 0.2f, 1f); // Red
+						colors.highlightedColor = new Color(0.9f, 0.3f, 0.3f, 1f);
+						colors.pressedColor = new Color(0.7f, 0.1f, 0.1f, 1f);
+						button.colors = colors;
+					}
+				}
+			}
+			return uIDynamicButton;
+		}
 
+		// ...existing code...
 	}
 }

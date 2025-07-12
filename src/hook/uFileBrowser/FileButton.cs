@@ -65,6 +65,10 @@ namespace var_browser
         public string imgPath;
 
         private FileBrowser browser;
+        
+        // Selection state for multi-select functionality
+        private bool isSelected = false;
+        public bool IsSelected => isSelected;
 
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -86,12 +90,29 @@ namespace var_browser
         {
             button.transition = Selectable.Transition.None;
             buttonImage.overrideSprite = selectedSprite;
+            isSelected = true;
         }
 
         public void Unselect()
         {
             button.transition = Selectable.Transition.SpriteSwap;
             buttonImage.overrideSprite = null;
+            isSelected = false;
+        }
+
+        public void ToggleSelection()
+        {
+            if (isSelected)
+            {
+                Unselect();
+            }
+            else
+            {
+                Select();
+            }
+            
+            // Update visual state
+            UpdateSelectionVisuals();
         }
 
         void InstallInBackground()
@@ -138,41 +159,9 @@ namespace var_browser
             LogUtil.Log("OnClick "+this.fullPath);
             if (browser!=null)
             {
-                if (browser.inGame)
-                {
-                    //EnsureInstalled();
-                    browser.OnFileClick(this);
-                }
-                else
-                {
-                    try
-                    {
-                        if (fullPath.EndsWith(".json"))
-                        {
-                            using (FileEntryStream fileEntryStream = FileManager.OpenStream(fullPath))
-                            {
-                                using (StreamReader streamReader = new StreamReader(fileEntryStream.Stream))
-                                {
-                                    string aJSON = streamReader.ReadToEnd();
-                                    bool dirty = EnsureInstalledByText(aJSON);
-                                    if (dirty)
-                                    {
-                                        MVR.FileManagement.FileManager.Refresh();
-                                        var_browser.FileManager.Refresh();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        LogUtil.Log(e.ToString());
-                    }
-                    
-
-                    OnInstalled(true);
-                    browser.OnFileClick(this);
-                }
+                // Instead of installing immediately, toggle selection
+                ToggleSelection();
+                browser.OnFileSelectionChanged(this);
             }
         }
 
@@ -494,6 +483,13 @@ namespace var_browser
         }
         void UpdateButtonImageColor(bool isInstalled, bool isAutoInstall,bool isFavorite)
         {
+            // If selected, use a distinct selection color
+            if (isSelected)
+            {
+                this.buttonImage.color = new Color32(100, 200, 255, 255); // Light blue for selection
+                return;
+            }
+            
             if (isAutoInstall)
             {
                 this.buttonImage.color = new Color32(255, 150, 0, 255);
@@ -510,6 +506,12 @@ namespace var_browser
                 return;
             }
             this.buttonImage.color = Color.white;
+        }
+
+        public void UpdateSelectionVisuals()
+        {
+            // Force refresh of button colors to reflect selection state
+            RefreshInstallStatus();
         }
     }
 }

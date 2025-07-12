@@ -308,6 +308,11 @@ namespace var_browser
 
 		private FileButton selected;
 
+		// Multi-selection support
+		private HashSet<FileButton> selectedFiles = new HashSet<FileButton>();
+		public UIDynamicButton installButton;
+		public UIDynamicButton clearButton;
+
 		private FileBrowserCallback callback;
 
 		private FileBrowserFullCallback fullCallback;
@@ -1101,6 +1106,10 @@ namespace var_browser
 				{
 					selected.Unselect();
 				}
+				
+				// Clear multi-selection when hiding
+				OnClearSelectionClicked();
+				
 				ClearImageQueue();
 				SaveDirectoryScrollPos();
 				if (clearCurrentPathOnHide)
@@ -1699,38 +1708,38 @@ namespace var_browser
 
 		private void SelectFile(FileButton fb)
 		{
-			//if (fb == selected && selectDirectory && fb.isDir)
-			//{
-			//	GotoDirectory(fb.fullPath, currentPackageFilter);
-			//}
-			//else
+			// Keep single selection logic for other functionality
+			if (selected != null && selected != fb)
 			{
-				//if (!fb.isDir && selectDirectory)
-				//{
-				//	return;
-				//}
-				if (selected != null)
+				// Only unselect if it's not part of multi-selection
+				if (!selected.IsSelected)
 				{
 					selected.Unselect();
 				}
-				selected = fb;
+			}
+			selected = fb;
+			
+			// Don't override multi-selection behavior
+			if (!fb.IsSelected)
+			{
 				fb.Select();
-				if (fileEntryField != null)
+			}
+			
+			if (fileEntryField != null)
+			{
+				fileEntryField.text = selected.text;
+				if (fileEntryField.text.EndsWith(".json"))
 				{
-					fileEntryField.text = selected.text;
-					if (fileEntryField.text.EndsWith(".json"))
-					{
-						fileEntryField.text = fileEntryField.text.Replace(".json", string.Empty);
-					}
-					else if (fileEntryField.text.EndsWith(".vac"))
-					{
-						fileEntryField.text = fileEntryField.text.Replace(".vac", string.Empty);
-					}
+					fileEntryField.text = fileEntryField.text.Replace(".json", string.Empty);
 				}
-				if (selectOnClick)
+				else if (fileEntryField.text.EndsWith(".vac"))
 				{
-					SelectButtonClicked();
+					fileEntryField.text = fileEntryField.text.Replace(".vac", string.Empty);
 				}
+			}
+			if (selectOnClick)
+			{
+				SelectButtonClicked();
 			}
 		}
 
@@ -2537,6 +2546,10 @@ namespace var_browser
 			{
 				int num = 0;
 				ClearSearch();
+				
+				// Clear selections when file list is refreshed
+				OnClearSelectionClicked();
+				
 				if (cachedFiles != null)
 				{
 					num += cachedFiles.Count;
@@ -2739,6 +2752,20 @@ namespace var_browser
 
 			//left
 			InitTags();
+
+			// Initialize Install and Clear buttons
+			installButton = CreateInstallButton(-350, -50);
+			if (installButton != null)
+			{
+				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
+				installButton.button.interactable = false; // Initially disabled
+			}
+
+			clearButton = CreateClearButton(-180, -50);
+			if (clearButton != null)
+			{
+				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
+			}
 
 #region 头发
             {
@@ -3013,6 +3040,87 @@ namespace var_browser
 			//LogUtil.Log("SyncCreatorFilter "+s);
 			_creatorFilter = s;
 			ResetDisplayedPage();
+		}
+
+		public void OnFileSelectionChanged(FileButton fb)
+		{
+			if (fb.IsSelected)
+			{
+				selectedFiles.Add(fb);
+			}
+			else
+			{
+				selectedFiles.Remove(fb);
+			}
+			
+			// Update install button state
+			if (installButton != null)
+			{
+				installButton.button.interactable = selectedFiles.Count > 0;
+			}
+			
+			LogUtil.Log($"Selected files count: {selectedFiles.Count}");
+		}
+
+		public void OnInstallSelectedClicked()
+		{
+			LogUtil.Log($"Installing {selectedFiles.Count} selected files");
+			
+			foreach (var fileButton in selectedFiles)
+			{
+				try
+				{
+					if (inGame)
+					{
+						fileButton.EnsureInstalled();
+					}
+					else
+					{
+						if (fileButton.fullPath.EndsWith(".json"))
+						{
+							using (FileEntryStream fileEntryStream = FileManager.OpenStream(fileButton.fullPath))
+							{
+								using (StreamReader streamReader = new StreamReader(fileEntryStream.Stream))
+								{
+									string aJSON = streamReader.ReadToEnd();
+									bool dirty = FileButton.EnsureInstalledByText(aJSON);
+									if (dirty)
+									{
+										MVR.FileManagement.FileManager.Refresh();
+										var_browser.FileManager.Refresh();
+									}
+								}
+							}
+						}
+						fileButton.OnInstalled(true);
+					}
+				}
+				catch (Exception e)
+				{
+					LogUtil.LogError($"Error installing {fileButton.fullPath}: {e.Message}");
+				}
+			}
+			
+			// Clear selection after installation
+			OnClearSelectionClicked();
+		}
+
+		public void OnClearSelectionClicked()
+		{
+			LogUtil.Log($"Clearing selection of {selectedFiles.Count} files");
+			
+			foreach (var fileButton in selectedFiles)
+			{
+				fileButton.Unselect();
+				fileButton.UpdateSelectionVisuals();
+			}
+			selectedFiles.Clear();
+			
+			// Update install button state
+			if (installButton != null)
+			{
+				installButton.button.interactable = false;
+			}
 		}
 	}
 
