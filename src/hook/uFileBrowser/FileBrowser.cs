@@ -2756,24 +2756,28 @@ namespace var_browser
 			{
 				VamHookPlugin.singleton.OpenPresetHair();
 			});
-			CreateRightButton("Other",-650 + offset).button.onClick.AddListener(() =>
+			CreateRightButton("Skin", -650 + offset).button.onClick.AddListener(() =>
+			{
+				VamHookPlugin.singleton.OpenPresetSkin();
+			});
+			CreateRightButton("Other",-700 + offset).button.onClick.AddListener(() =>
 			{
 				VamHookPlugin.singleton.OpenPresetOther();
 			});
-			CreateRightHeader("Misc", -700 - 10 + offset, Color.black);
-			CreateRightButton("AssetBundle", -750 + offset).button.onClick.AddListener(() =>
+			CreateRightHeader("Misc", -750 - 10 + offset, Color.black);
+			CreateRightButton("AssetBundle", -800 + offset).button.onClick.AddListener(() =>
 			{
 				VamHookPlugin.singleton.OpenMiscCUA();
 			});
-			CreateRightButton("All", -800 + offset).button.onClick.AddListener(() =>
+			CreateRightButton("All", -850 + offset).button.onClick.AddListener(() =>
 			{
 				VamHookPlugin.singleton.OpenMiscAll();
 			});
 
 			// Install section
-			CreateRightHeader("Install", -850 - 10 + offset, Color.black);
+			CreateRightHeader("Install", -900 - 10 + offset, Color.black);
 			
-			installButton = CreateRightInstallButton(-900 + offset);
+			installButton = CreateRightInstallButton(-950 + offset);
 			if (installButton != null)
 			{
 				installButton.button.onClick.AddListener(OnInstallSelectedClicked);
@@ -2781,29 +2785,29 @@ namespace var_browser
 			}
 
 			// Functions section
-			CreateRightHeader("Functions", -950 - 10 + offset, Color.black);
+			CreateRightHeader("Functions", -1000 - 10 + offset, Color.black);
 			
-			clearButton = CreateRightClearButton(-1000 + offset);
+			clearButton = CreateRightClearButton(-1050 + offset);
 			if (clearButton != null)
 			{
 				clearButton.button.onClick.AddListener(OnClearSelectionClicked);
 			}
 
-			setFavoriteButton = CreateRightSetFavoriteButton(-1050 + offset);
+			setFavoriteButton = CreateRightSetFavoriteButton(-1100 + offset);
 			if (setFavoriteButton != null)
 			{
 				setFavoriteButton.button.onClick.AddListener(OnSetFavoriteClicked);
 				setFavoriteButton.button.interactable = false; // Initially disabled
 			}
 
-			setAutoInstallButton = CreateRightSetAutoInstallButton(-1100 + offset);
+			setAutoInstallButton = CreateRightSetAutoInstallButton(-1150 + offset);
 			if (setAutoInstallButton != null)
 			{
 				setAutoInstallButton.button.onClick.AddListener(OnSetAutoInstallClicked);
 				setAutoInstallButton.button.interactable = false; // Initially disabled
 			}
 
-			setHiddenButton = CreateRightSetHiddenButton(-1150 + offset);
+			setHiddenButton = CreateRightSetHiddenButton(-1200 + offset);
 			if (setHiddenButton != null)
 			{
 				setHiddenButton.button.onClick.AddListener(OnSetHiddenClicked);
@@ -2811,9 +2815,9 @@ namespace var_browser
 			}
 
 			// Load section
-			CreateRightHeader("Load", -1200 - 10 + offset, Color.black);
+			CreateRightHeader("Load", -1250 - 10 + offset, Color.black);
 			
-			loadButton = CreateRightLoadButton(-1250 + offset);
+			loadButton = CreateRightLoadButton(-1300 + offset);
 			if (loadButton != null)
 			{
 				loadButton.button.onClick.AddListener(OnLoadSelectedClicked);

@@ -117,6 +117,10 @@ namespace var_browser
         {
             ShowFileBrowser("Preset Hair", "vap", "Custom/Hair", false, false);
         }
+        public void OpenPresetSkin()
+        {
+            ShowFileBrowser("Preset Skin", "vap", "Custom/Atom/Person/Skin", false, false);
+        }
         public void OpenPresetOther()
         {
             ShowFileBrowser("Preset Other", "vap", "Custom", false, false);

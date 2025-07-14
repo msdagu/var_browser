@@ -72,6 +72,8 @@ namespace VarBrowser
                 RegisterAction(new JSONStorableAction("OpenCategoryHair", OpenCategoryHair));
                 CreateButton("Pose", true).button.onClick.AddListener(OpenCategoryPose);
                 RegisterAction(new JSONStorableAction("OpenCategoryPose", OpenCategoryPose));
+                CreateButton("Skin", true).button.onClick.AddListener(OpenCategorySkin);
+                RegisterAction(new JSONStorableAction("OpenCategorySkin", OpenCategorySkin));
 
                 //CreateHeader("Plugin", true, Color.white);
                 CreateHeader("Preset", true, Color.white);
@@ -151,6 +153,10 @@ namespace VarBrowser
         void OpenPresetHair()
         {
             m_Messager.SendMessage("Invoke", "OpenPresetHair");
+        }
+        void OpenPresetSkin()
+        {
+            m_Messager.SendMessage("Invoke", "OpenPresetSkin");
         }
         void OpenPresetOther()
         {
