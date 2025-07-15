@@ -206,7 +206,7 @@ namespace var_browser
                 var pkg = FileManager.GetPackage(item);
                 if (pkg != null)
                 {
-                    bool dirty = pkg.InstallSelf();
+                    bool dirty = pkg.InstallRecursive();
                     if (dirty) flag = true;
                 }
             }

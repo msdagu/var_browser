@@ -1108,7 +1108,7 @@ namespace var_browser
 					VarPackage package = FileManager.GetPackage(key);
 					if (package != null)
 					{
-						bool dirty2= package.InstallSelf();
+						bool dirty2= package.InstallRecursive();
 						if (dirty2) flag = true;
 					}
 				}
