@@ -199,17 +199,10 @@ namespace var_browser
         void TryAutoInstall()
         {
             if (AutoInstalled) return;
-            bool flag = false;
             AutoInstalled = true;
-            foreach (var item in FileEntry.AutoInstallLookup)
-            {
-                var pkg = FileManager.GetPackage(item);
-                if (pkg != null)
-                {
-                    bool dirty = pkg.InstallRecursive();
-                    if (dirty) flag = true;
-                }
-            }
+            
+            bool flag = VarPackage.InstallGroup(FileEntry.AutoInstallLookup);
+            
             if (flag)
             {
                 MVR.FileManagement.FileManager.Refresh();

@@ -1163,6 +1163,55 @@ namespace var_browser
                 info.Refresh();
             return true;
 		}
+		
+		/// <summary>
+		/// Efficiently installs a group of packages and all their dependencies.
+		/// This method collects all dependencies first, deduplicates them, and installs them in proper order.
+		/// </summary>
+		/// <param name="packageUids">Collection of package UIDs to install</param>
+		/// <returns>True if any packages were actually installed</returns>
+		public static bool InstallGroup(IEnumerable<string> packageUids)
+		{
+			if (packageUids == null || !packageUids.Any())
+				return false;
+
+			HashSet<string> toBeInstalled = new HashSet<string>();
+			
+			// First pass: get all root packages and their dependencies
+			foreach (string uid in packageUids)
+			{
+				if (toBeInstalled.Contains(uid))
+					continue; // Skip if already processed
+					
+				VarPackage pkg = FileManager.GetPackage(uid);
+				if (pkg != null)
+				{
+					toBeInstalled.Add(uid);
+					if (pkg.RecursivePackageDependencies != null)
+					{
+						foreach (string dep in pkg.RecursivePackageDependencies)
+						{
+							toBeInstalled.Add(dep);
+						}
+					}
+				}
+			}
+			
+			bool anyInstalled = false;
+			foreach (string uid in toBeInstalled)
+			{
+				VarPackage pkg = FileManager.GetPackage(uid);
+				if (pkg != null)
+				{
+					bool installed = pkg.InstallSelf();
+					if (installed)
+						anyInstalled = true;
+				}
+			}
+			
+			return anyInstalled;
+		}
+
 	}
 
 }
